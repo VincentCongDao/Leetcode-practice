@@ -15,17 +15,24 @@ ExpenseWithList is an application where users can able to track their spending, 
 React.js
 Material UI
 
+
 **Database:** 
-- MongoDB 
+- Firebase
 
 ## Feature
 
 ## Credits
 
+## List to do
 
-### Upcoming features 
-
-- [] User portal
+- [x] Install Firebase
+- [] Create a portal
+- [] Firebase Auth
+- [] Connect to firebase collection
+- [] Form For Expense
 - [] Able to save lists
-- [] Snippet for list informations
+- [] Display for list informations
 - [] Clean up the UI
+- [] Create a form for to do list
+- [] Connect to a new collection - realtime - for to do list
+- [] Display the realtime db for the list

@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
+import { useState } from "react";
+
 
 function ExpenseTracker() {
     const [intakeItems, setIntakeInput] = useState("");
     const [intakePrice, setIntakePrice] = useState("");
     const [userDate, setUserDate] = useState<Dayjs | null>(dayjs());
-
+    const [moneyCategory, setMoneyCategory] = useState<string>("");
     const intakeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIntakeInput(e.currentTarget.value);
     };
@@ -16,9 +17,12 @@ function ExpenseTracker() {
     const intakePriceHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIntakePrice(Number(e.currentTarget.value).toFixed(2));
     };
+    const moneyType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setMoneyCategory(e.target.value);
+    };
 
-    const saveToMongo = (data: { item: string, price: string, date: string }) => {
-        console.log("Data Saved to mongo", data);
+    const saveToFB = (data: { item: string, price: string, type: string, date: string }) => {
+        console.log("Data save to Firebase", data);
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,10 +30,12 @@ function ExpenseTracker() {
         const data = {
             item: intakeItems,
             price: intakePrice,
+            type: moneyCategory,
             date: userDate ? userDate.format("MM/DD/YYYY") : ""
         };
-        saveToMongo(data);
+        saveToFB(data);
     };
+
 
     return (
         <div>
@@ -49,6 +55,13 @@ function ExpenseTracker() {
                         value={intakePrice}
                         onChange={intakePriceHandler}
                     />
+                </label>
+                <label>
+                    <select onChange={moneyType} value={moneyType}>
+                        <option value="Income">Income</option>
+                        <option value="Expense">Expense</option>
+                        <option value="Saving">Saving</option>
+                    </select>
                 </label>
                 <label className="form-label">
                     Date:{" "}
