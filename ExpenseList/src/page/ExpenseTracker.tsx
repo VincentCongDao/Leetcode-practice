@@ -4,11 +4,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
-import { app } from "../auth/firebase";
+import { dbFirebase } from "../auth/firebase";
 
 function ExpenseTracker() {
     const [intakeItems, setIntakeInput] = useState("");
-    const [intakePrice, setIntakePrice] = useState("");
+    const [intakePrice, setIntakePrice] = useState<number>(0);
     const [userDate, setUserDate] = useState<Dayjs | null>(dayjs());
     const [moneyCategory, setMoneyCategory] = useState<string>("");
     const intakeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +16,7 @@ function ExpenseTracker() {
     };
 
     const intakePriceHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setIntakePrice(Number(e.currentTarget.value).toFixed(2));
+        setIntakePrice(parseFloat(e.currentTarget.value));
     };
     const moneyType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setMoneyCategory(e.target.value);
@@ -24,15 +24,9 @@ function ExpenseTracker() {
 
     const saveToFB = async (data: { item: string, price: number, type: string, date: string }) => {
         try {
-            const setRef = await setDoc(doc(app, data), {
-                item: "",
-                price: "",
-                type: "",
-                data: ""
-
-            });
-            const docRef = await addDoc(collection(app, "expense"), data)
-            console.log("Document user: ", docRef.id)
+            const docId = `${data.item}-${data.date}`;
+            const docRef = await setDoc(doc(collection(dbFirebase, "expense"), docId), data)
+            console.log("Form document information: ", docRef)
         }
         catch (err) {
             console.log("Error: ", err)
