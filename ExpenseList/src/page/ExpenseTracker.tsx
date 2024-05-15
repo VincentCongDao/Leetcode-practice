@@ -2,8 +2,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
-
+import { app } from "../auth/firebase";
 
 function ExpenseTracker() {
     const [intakeItems, setIntakeInput] = useState("");
@@ -21,8 +22,21 @@ function ExpenseTracker() {
         setMoneyCategory(e.target.value);
     };
 
-    const saveToFB = (data: { item: string, price: string, type: string, date: string }) => {
-        console.log("Data save to Firebase", data);
+    const saveToFB = async (data: { item: string, price: number, type: string, date: string }) => {
+        try {
+            const setRef = await setDoc(doc(app, data), {
+                item: "",
+                price: "",
+                type: "",
+                data: ""
+
+            });
+            const docRef = await addDoc(collection(app, "expense"), data)
+            console.log("Document user: ", docRef.id)
+        }
+        catch (err) {
+            console.log("Error: ", err)
+        }
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
