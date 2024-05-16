@@ -26,7 +26,9 @@ function ExpenseTracker() {
         try {
             const docId = `${data.item}-${data.date}`;
             const docRef = await setDoc(doc(collection(dbFirebase, "expense"), docId), data)
+            const addDb = await addDoc(collection(dbFirebase, "expense"), data)
             console.log("Form document information: ", docRef)
+            console.log("Adding to the documentation: ", addDb)
         }
         catch (err) {
             console.log("Error: ", err)
@@ -42,6 +44,7 @@ function ExpenseTracker() {
             date: userDate ? userDate.format("MM/DD/YYYY") : ""
         };
         saveToFB(data);
+        console.log(data)
     };
 
 
@@ -54,6 +57,7 @@ function ExpenseTracker() {
                         type="text"
                         value={intakeItems}
                         onChange={intakeInputHandler}
+                        required
                     />
                 </label>
                 <label className="form-label">
@@ -62,10 +66,11 @@ function ExpenseTracker() {
                         type="number"
                         value={intakePrice}
                         onChange={intakePriceHandler}
+                        required
                     />
                 </label>
                 <label>
-                    <select onChange={moneyType} value={moneyType}>
+                    <select onChange={moneyType} required>
                         <option value="Income">Income</option>
                         <option value="Expense">Expense</option>
                         <option value="Saving">Saving</option>
