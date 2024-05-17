@@ -4,9 +4,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
+import { useAuth } from "../AuthContext";
 import { dbFirebase } from "../auth/firebase";
+import ElementContainer from "../components/ElementContainer";
 
 function ExpenseTracker() {
+    const { user, loading } = useAuth()
     const [intakeItems, setIntakeInput] = useState("");
     const [intakePrice, setIntakePrice] = useState<number>(0);
     const [userDate, setUserDate] = useState<Dayjs | null>(dayjs());
@@ -34,6 +37,13 @@ function ExpenseTracker() {
             console.log("Error: ", err)
         }
     };
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!user) {
+        return <div>Please sign in to access the expense tracker.</div>;
+    }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -49,7 +59,7 @@ function ExpenseTracker() {
 
 
     return (
-        <div>
+        <ElementContainer>
             <form onSubmit={handleSubmit} className="form-wrapper">
                 <label className="form-label">
                     What is the item?
@@ -70,7 +80,7 @@ function ExpenseTracker() {
                     />
                 </label>
                 <label>
-                    <select onChange={moneyType} required>
+                    <select onChange={moneyType} value={moneyCategory} required>
                         <option value="Income">Income</option>
                         <option value="Expense">Expense</option>
                         <option value="Saving">Saving</option>
@@ -88,7 +98,7 @@ function ExpenseTracker() {
                 </label>
                 <button type="submit">Submit</button>
             </form>
-        </div>
+        </ElementContainer>
     );
 }
 

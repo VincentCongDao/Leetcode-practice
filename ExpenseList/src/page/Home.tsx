@@ -1,9 +1,9 @@
 import ElementContainer from "../components/ElementContainer";
 
-const ListToDo = () => {
+const Home = () => {
     return (<ElementContainer>
-        This is List to do
+        This is home page
     </ElementContainer>);
 }
 
-export default ListToDo;
+export default Home;

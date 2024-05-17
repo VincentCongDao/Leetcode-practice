@@ -1,7 +1,7 @@
-import { Avatar } from "@mui/material";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import SignOut from "../../page/auth/SignOut";
 
 
 const Navbar = () => {
@@ -25,21 +25,25 @@ const Navbar = () => {
                 <nav className="wrapper">
                     <div className="nav-logo">
                         <Link to="/">
-                            <img src="" alt="brand logo" />
+                            <img src="./expenselist.svg" alt="brand logo" />
                         </Link>
                     </div>
                     <div className="nav-links">
                         <ul className="nav-link-body">
-                            <li className="nav-link"><Link to="/expensetracker">Expense</Link></li>
-                            <li className="nav-link"><Link to="/todolist">To Do List</Link></li>
                             {userPortal ? (
-                                <li className="nav-link"><Avatar alt="user" src="https://example.com/user-avatar.jpg" /></li>
+                                <div>
+                                    <li className="nav-link"><Link to="/expensetracker">Expense</Link></li>
+                                    <li className="nav-link"><Link to="/todolist">To Do List</Link></li>
+                                    <SignOut />
+                                </div>
                             ) : (
-                                <li className="nav-link"><Link to="/signup">Sign Up</Link></li>
+                                <div>
+                                    <li className="nav-link"><Link to="/signup">Sign Up</Link></li>
+                                </div>
                             )} </ul>
                     </div>
-                </nav>
-            </div>
+                </nav >
+            </div >
         </>);
 }
 

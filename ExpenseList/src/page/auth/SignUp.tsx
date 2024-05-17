@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { auth } from "../../auth/firebase";
+import ElementContainer from "../../components/ElementContainer";
 const SignUp = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState<string>("");
@@ -13,7 +14,7 @@ const SignUp = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             const user = userCredential.user;
             console.log(user)
-            navigate("/SignIn")
+            navigate("/")
         }
         catch (error) {
             const errorMessage = (error as Error).message
@@ -22,8 +23,8 @@ const SignUp = () => {
         }
     }
     return (
-        <>
-            <form className="" onSubmit={onSubmit}>
+        <ElementContainer>
+            <form className="form-sign sign-up-form" onSubmit={onSubmit}>
                 <div>
                     <div>
                         <div>
@@ -41,7 +42,7 @@ const SignUp = () => {
                         <div>
                             <p>
                                 Already have an account? {" "}
-                                <NavLink to="/SignIn">
+                                <NavLink to="/signin">
                                     Sign In
                                 </NavLink>
                             </p>
@@ -49,7 +50,7 @@ const SignUp = () => {
                     </div>
                 </div>
             </form>
-        </>
+        </ElementContainer>
     );
 }
 

@@ -1,35 +1,48 @@
+import { Snackbar } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { auth } from "../../auth/firebase";
-import { useToast } from "../../components/ui/use-toast";
+import ElementContainer from "../../components/ElementContainer";
 const SignIn = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const { toast } = useToast()
+    const [open, setOpen] = useState(false);
+
+    const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
     const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             const user = userCredential.user;
             if (user) {
-                toast({
-                    title: "You have already been login in"
-                })
+                <Snackbar open={open} message="You are sign in" autoHideDuration={1000} onClose={handleClose} />
             }
             console.log(user)
             navigate("/")
         }
         catch (error) {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password)
+            const user = userCredential.user;
+            if (!user) {
+                <Snackbar open={open} message="Wrong password or email" autoHideDuration={2000} onClose={handleClose} />
+            }
             const errorMessage = (error as Error).message
             console.log(errorMessage)
 
         }
     }
     return (
-        <>
-            <form className="" onSubmit={onLogin}>
+        <ElementContainer>
+            <form className="form-sign sign-in-form" onSubmit={onLogin}>
                 <div>
                     <div>
                         <div>
@@ -51,7 +64,7 @@ const SignIn = () => {
                                 <NavLink to="/resetpassword">
                                     Reset Your Password
                                 </NavLink>
-                                <NavLink to="/signout">
+                                <NavLink to="/signup">
                                     Sign Up
                                 </NavLink>
                             </p>
@@ -59,7 +72,7 @@ const SignIn = () => {
                     </div>
                 </div>
             </form>
-        </>
+        </ElementContainer>
     );
 }
 
